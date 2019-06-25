@@ -53,7 +53,7 @@ API_VERSION = 'v1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
 QUEUE=Queue()
-
+BUCKET_NAME= "secnerio1"
 class Server(object):
     """Represents the state of the server."""
 
@@ -218,7 +218,7 @@ def parse_command_line_args():
 
 def main():
     args = parse_command_line_args()
-    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,"secnerio1"))
+    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,BUCKET_NAME))
     server = Server(args.service_account_json)
     server.run(args.project_id, args.pubsub_subscription)
 
