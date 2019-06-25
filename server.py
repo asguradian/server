@@ -218,7 +218,7 @@ def parse_command_line_args():
 
 def main():
     args = parse_command_line_args()
-    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE))
+    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,"secnerio1"))
     server = Server(args.service_account_json)
     server.run(args.project_id, args.pubsub_subscription)
 

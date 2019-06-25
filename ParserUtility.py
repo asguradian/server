@@ -11,5 +11,5 @@ def parseImage(img):
 
 
 def buildFileName(createdDate, deviceName):
-     date_time = createdDate.strftime("%m/%d/%Y-%H:%M:%S")
-     return deviceName+ date_time
+     date_time = createdDate.strftime("%m:%d:%Y-%H:%M:%S")
+     return deviceName+"/"+date_time
