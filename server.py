@@ -52,7 +52,7 @@ API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 API_VERSION = 'v1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
-QUEUE=Queue()
+QUEUE=Queue()# synchronised queue that hold the image read from cloud
 BUCKET_NAME= "secnerio1"
 class Server(object):
     """Represents the state of the server."""
@@ -153,9 +153,8 @@ class Server(object):
             """
             try:
                 stream= jsonpickle.decode(message.data)
-                QUEUE.put(stream) # add message to the Queue
+                QUEUE.put(stream) # add message to the Queue to be processed later by the asynchronous worker
                 print("Message acknowledge")
-                #data= json.loads(message.data.decode('utf-8'))
             except ValueError as e:
                 print('Loading Payload ({}) threw an Exception: {}.'.format(
                     message.data, e))
@@ -218,7 +217,7 @@ def parse_command_line_args():
 
 def main():
     args = parse_command_line_args()
-    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,BUCKET_NAME))
+    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,BUCKET_NAME)) #start an asynchronous consumer, it read the images and upload  to the cloud storage
     server = Server(args.service_account_json)
     server.run(args.project_id, args.pubsub_subscription)
 
