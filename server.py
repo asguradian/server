@@ -53,7 +53,6 @@ API_VERSION = 'v1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
 QUEUE=Queue()# synchronised queue that hold the image read from cloud
-BUCKET_NAME= "secnerio1"
 class Server(object):
     """Represents the state of the server."""
 
@@ -198,7 +197,7 @@ def parse_command_line_args():
     # Required arguments
     parser.add_argument(
         '--project_id',
-        default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
+        default="perch-244901",
         required=True,
         help='GCP cloud project name.')
     parser.add_argument(
@@ -211,13 +210,16 @@ def parse_command_line_args():
         '--service_account_json',
         default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
         help='Path to service account json file.')
-
+    parser.add_argument(
+        '--bk_name',
+        required=True,
+        help='Name of the bucket to store the image')
     return parser.parse_args()
 
 
 def main():
     args = parse_command_line_args()
-    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,BUCKET_NAME)) #start an asynchronous consumer, it read the images and upload  to the cloud storage
+    _thread.start_new_thread(processAsynchronously,("AsynchronousWorker", QUEUE,args.bk_name)) #start an asynchronous consumer, it read the images and upload  to the cloud storage
     server = Server(args.service_account_json)
     server.run(args.project_id, args.pubsub_subscription)
 
